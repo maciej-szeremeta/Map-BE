@@ -1,4 +1,4 @@
-import { AdRecord, } from '../records/ad.record';
+import { AdRecord, } from '../../records/ad.record';
 
 const defaultAd = {
   name       : 'Test Name',

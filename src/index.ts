@@ -17,6 +17,7 @@ import './utils/db';
 
 // * Import Błędy
 import { handleError, } from './utils/error';
+import { adRouter } from './routers/ad.router';
 
 // Import ścieżki API
 // import { homeRouter, } from './routers/home';
@@ -52,9 +53,9 @@ app.use (json ());
 // * Dodawanie prefix do ścieżek i zmiana ścieżek z app na router
 const router = Router ();
 
-// router.use (
-//   '/ad', adRouter
-// );
+router.use (
+  '/ad', adRouter
+);
 app.use (
   '/api', router
 );

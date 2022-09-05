@@ -51,7 +51,7 @@ test (
   }
 );
 
-// Sprawdza czy dane są przefiltrowane
+// Sprawdza czy dane zwracane są przefiltrowane
 test (
   'AdRecord.findAll returns smaller amount of data', async () => {
     const ads = await AdRecord.findAll ('');
@@ -59,5 +59,38 @@ test (
     expect ((ads[ 0 ] as AdEntity).price).toBeUndefined ();
     expect ((ads[ 0 ] as AdEntity).description).toBeUndefined ();
     expect ((ads[ 0 ] as AdEntity).url).toBeUndefined ();
+  }
+);
+
+
+const defaultObject = {
+      name: 'Test Name',
+      description: 'blah',
+      url: 'http://wp.pl',
+      price: 12,
+      lat: 50.000000,
+      lon: 9,
+    }
+// Sprawdza czy record posiada UUID
+test(
+  'AdRecord.insert returns new UUID', async () => {
+    const ad = new AdRecord(defaultObject);
+    await ad.insert();
+    
+    expect(ad.id).toBeDefined();
+    expect(typeof ad.id).toBe('string');
+  }
+);
+
+// Sprawdza czy record zapisał się bazy
+test(
+  'AdRecord.insert inserts data to database', async () => {
+    const ad = new AdRecord(defaultObject);
+    await ad.insert();
+    
+    const foundAd = await AdRecord.getOne(ad.id)
+    expect(foundAd).toBeDefined();
+    expect(foundAd).not.toBeNull();
+    expect((foundAd as AdEntity).id).toBe(ad.id);
   }
 );

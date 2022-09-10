@@ -6,7 +6,7 @@ import express, { json, Router, } from 'express';
 import rateLimit from 'express-rate-limit';
 
 // * Import plików konfiguracyjnych
-import { config, } from './config/config';
+import { NODE_ENV, PORT, URL, } from './config/config';
 
 // * Import async trycatch w router
 import 'express-async-errors';
@@ -17,7 +17,7 @@ import './utils/db';
 
 // * Import Błędy
 import { handleError, } from './utils/error';
-import { adRouter } from './routers/ad.router';
+import { adRouter, } from './routers/ad.router';
 
 // Import ścieżki API
 // import { homeRouter, } from './routers/home';
@@ -37,7 +37,7 @@ app.use (rateLimit ({
 // * Ustawienia CORS
 // W skazanie jakie adresy dopuszczamy do backendu
 app.use (cors ({
-  origin : 'http://localhost:3000',
+  origin : `${URL}:3000`,
   methods: 'GET,POST,DELETE,PUT,PATCH',
 
   // Ustawia poświadczenia nagłówka
@@ -45,7 +45,7 @@ app.use (cors ({
 }));
 
 // * Ustawienie Morgana
-app.use (morgan ('dev'));
+app.use (morgan (`${NODE_ENV === 'dev'? 'dev':'combined'}`));
 
 // * Dane przychodzące  do express z FE fetch, axios
 app.use (json ());
@@ -63,11 +63,11 @@ app.use (
 // * Error Handler 
 app.use (handleError );
 
-const PORT:number = config.PORT || 5000;
+const port = PORT || 5000;
 
 // * Nasłuchiwanie
 app.listen (
   PORT, () => {
-    return console.log (chalk.yellow.bold (`Server running in ${config.NODE_ENV} mode on http://localhost:${PORT}`));
+    return console.log (chalk.yellow.bold (`Server running in ${NODE_ENV} mode on ${URL}:${port}`));
   }
 );
